@@ -47,7 +47,7 @@ preprocessor <- recipe(Y ~ ., data = df) %>%
 
 # Gradient boosting classifier (close equivalent to sklearn's GradientBoostingClassifier)
 classifier_spec <- boost_tree(mode = "classification") %>%
-  set_engine("gbm")
+  set_engine("xgboost")
 
 model_workflow <- workflow() %>%
   add_recipe(preprocessor) %>%
@@ -78,7 +78,7 @@ for (metric_name in names(metric_map)) {
     filter(.metric %in% c("bal_accuracy", "accuracy", "f_meas", "roc_auc"))
 
   mean_score <- metric_tbl$mean[[1]]
-  std_score <- metric_tbl$std_err[[1]] * sqrt(nrow(folds$splits))
+  std_score <- metric_tbl$std_err[[1]] * sqrt(nrow(folds))
 
   cat(
     paste0(
